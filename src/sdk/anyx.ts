@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { getAnyxConfig } from "@/config/anyx";
 
 // Error classes for precise UI handling
 export class AuthError extends Error {
@@ -251,9 +252,10 @@ async function doRequest<T>(
 }
 
 export function createAnyxClient(options?: AnyxClientOptions): AnyxClient {
-  const baseUrl = options?.baseUrl ?? (import.meta as any).env?.VITE_ANYX_SERVER_URL;
-  const projectId = options?.projectId ?? (import.meta as any).env?.VITE_ANYX_PROJECT_ID;
-  const apiKey = options?.apiKey ?? (import.meta as any).env?.ANYX_COMMON_API_KEY; // allow via env for tests
+  const defaults = getAnyxConfig();
+  const baseUrl = options?.baseUrl ?? defaults.serverUrl;
+  const projectId = options?.projectId ?? defaults.projectId;
+  const apiKey = options?.apiKey ?? defaults.apiKey; // allow via env for tests
   const retryCfg = {
     retries: options?.retry?.retries ?? 2,
     backoffBaseMs: options?.retry?.backoffBaseMs ?? 400,
