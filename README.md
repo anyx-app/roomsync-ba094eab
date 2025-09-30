@@ -245,3 +245,61 @@ const anyx = createAnyxClient({ apiKey: process.env.ANYX_COMMON_API_KEY })
   - Ensure `projectId` is set (env, config, or `createAnyxClient({ projectId })`).
   - Ensure your backend proxy injects `x-api-key` (browser should not send it).
   - For server/test usage only, pass `apiKey` to `createAnyxClient`.
+
+## 🔐 Supabase Integration (Auth + Guards)
+
+This boilerplate includes optional Supabase auth with a drop-in UI and Google/GitHub OAuth.
+
+### Environment
+
+Add these to your `.env` (Vite requires the `VITE_` prefix):
+
+```env
+VITE_SUPABASE_URL=<your-supabase-url>
+VITE_SUPABASE_ANON_KEY=<your-anon-key>
+```
+
+### Files
+
+- `src/sdk/supabase.ts` – singleton Supabase client
+- `src/auth/AuthProvider.tsx` – exposes `{ user, session, loading, signOut }`
+- `src/auth/AuthGuard.tsx` – protects private routes
+- `src/hooks/useAuth.ts` – convenience hook
+- `src/pages/Auth.tsx` – drop-in auth UI (Google/GitHub)
+- `src/pages/Dashboard.tsx` – example protected page
+- `src/App.tsx` – provider wiring and routes
+
+### Routes
+
+- `/auth` – public authentication page
+- `/dashboard` – example protected route
+
+### Supabase Dashboard Setup
+
+1. In Supabase → Authentication → URL Configuration:
+   - Site URL: `http://localhost:5173` (and your prod domain)
+   - Additional Redirect URLs: `http://localhost:5173`
+2. In Authentication → Providers: enable Google and GitHub; paste Client ID/Secret.
+
+### Usage
+
+```tsx
+import { useAuth } from '@/hooks/useAuth'
+
+function Profile() {
+  const { user, loading, signOut } = useAuth()
+  if (loading) return null
+  if (!user) return <a href="/auth">Sign in</a>
+  return (
+    <div>
+      <p>{user.email}</p>
+      <button onClick={signOut}>Sign out</button>
+    </div>
+  )
+}
+```
+
+### Notes
+
+- Expect a brief loading state on page load while the session is restored.
+- If OAuth callbacks fail, verify Site/Redirect URLs and provider credentials.
