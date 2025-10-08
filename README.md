@@ -101,12 +101,43 @@ Best practices:
    ```bash
    npm run preview
    ```
+
 6. **Scaffold UI primitives**
 
    ```bash
    pnpm run scaffold:ui
    ```
    Regenerates stubs and re-exports for all UI primitives under `src/components/ui`.
+
+## 🛣️ Adding Pages and Routes
+
+The boilerplate starts minimal with just a homepage. When you're ready to add more pages:
+
+**See [ROUTING.md](./ROUTING.md)** for comprehensive guide including:
+- How to create new pages
+- Adding routes step-by-step
+- Using pre-built pages (Auth, Dashboard, Themes, Recipes, Showcase)
+- Protected routes with authentication
+- Nested routes and layouts
+- Navigation components
+- Best practices and examples
+
+**Quick example:**
+
+```tsx
+// 1. Create page: src/pages/About.tsx
+export default function About() {
+  return <div>About Page</div>
+}
+
+// 2. Add to App.tsx
+import About from "./pages/About"
+<Route path="/about" element={<About />} />
+
+// 3. Navigate
+import { Link } from 'react-router-dom'
+<Link to="/about">About</Link>
+```
 
 ## ⚙️ Customization
 
