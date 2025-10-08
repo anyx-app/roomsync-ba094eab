@@ -10,6 +10,16 @@ import {
   professionalDarkTheme,
   highContrastLightTheme,
   highContrastDarkTheme,
+  techLight,
+  techDark,
+  financeLight,
+  financeDark,
+  healthLight,
+  healthDark,
+  creativeLight,
+  creativeDark,
+  gamingLight,
+  gamingDark,
 } from './presets'
 
 // Registry of all available themes
@@ -24,6 +34,16 @@ export const themeRegistry: Record<string, ThemePreset> = {
   'professional-dark': professionalDarkTheme,
   'high-contrast-light': highContrastLightTheme,
   'high-contrast-dark': highContrastDarkTheme,
+  'tech-light': techLight,
+  'tech-dark': techDark,
+  'finance-light': financeLight,
+  'finance-dark': financeDark,
+  'health-light': healthLight,
+  'health-dark': healthDark,
+  'creative-light': creativeLight,
+  'creative-dark': creativeDark,
+  'gaming-light': gamingLight,
+  'gaming-dark': gamingDark,
 }
 
 // Legacy theme name mapping

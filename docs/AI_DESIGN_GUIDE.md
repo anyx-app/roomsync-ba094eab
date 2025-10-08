@@ -9,6 +9,101 @@ This guide helps AI agents understand how to use the design system to create **b
 
 ---
 
+## 🚀 START HERE: Brand Configuration System
+
+**IMPORTANT**: Before generating any UI, ALWAYS check the brand configuration:
+
+```tsx
+import { useBrand } from '@/hooks/useBrand'
+
+function Component() {
+  const { config, classes } = useBrand()
+  
+  // config.flavor → Determines entire visual personality
+  // config.preferredHero → Which hero to use
+  // config.preferredFeatureLayout → How to layout features
+  // classes.sectionPadding → Brand-aware spacing
+}
+```
+
+### 📚 Required Reading
+1. **[BRAND_FLAVORS.md](./BRAND_FLAVORS.md)** - Complete guide on 8 brand personalities and how to use them
+2. **[UI_PATTERNS.md](./UI_PATTERNS.md)** - Copy-paste ready patterns for common sections
+
+### ⚡ Quick Decision Tree
+
+**Step 1**: Read brand config
+```tsx
+const { config } = useBrand()
+```
+
+**Step 2**: Choose components based on config
+```tsx
+// Hero selection
+if (config.preferredHero === 'minimal') return <HeroMinimal />
+if (config.preferredHero === 'gradient') return <HeroGradient />
+if (config.preferredHero === 'spotlight') return <HeroSpotlight />
+
+// Feature layout
+if (config.preferredFeatureLayout === 'grid') return <FeatureGrid />
+if (config.preferredFeatureLayout === 'bento') return <BentoGrid />
+if (config.preferredFeatureLayout === 'showcase') return <FeatureShowcase />
+```
+
+**Step 3**: Apply brand classes
+```tsx
+<section className={classes.sectionPadding}> // Not hardcoded py-20
+  <div className={classes.container}>        // Not hardcoded max-w-7xl
+```
+
+### 🎨 Available Components by Category
+
+#### **Dashboard Components** (`@/components/recipes/dashboard`)
+- `StatCard` / `StatGrid` - KPI metrics with trends
+- `ChartCard` / `ChartGrid` - Chart containers
+- `DataTable` - Searchable, filterable tables
+
+#### **AI Components** (`@/components/recipes/ai`)
+- `ChatMessage` - Individual chat bubbles
+- `ChatInterface` - Complete chat UI with input
+- `TypingIndicator` - Animated typing effect
+
+#### **Filter Components** (`@/components/recipes/filters`)
+- `SearchBar` - Advanced search with suggestions
+- `FilterPanel` - Multi-group filter sidebar
+
+#### **Hero Components** (`@/components/recipes/heroes`)
+- `HeroGradient` - Animated gradient with orbs
+- `HeroSpotlight` - Spotlight effect hero
+- `HeroMinimal` - Clean, minimal hero
+
+#### **Feature Components** (`@/components/recipes/features`)
+- `FeatureGrid` - Spotlight cards in grid
+- `BentoGrid` - Modern variable-size grid
+- `FeatureShowcase` - Side-by-side layout
+
+#### **Effects** (`@/components/recipes/effects`)
+- `GradientBackground` - Animated backgrounds
+- `SpotlightCard` - Cursor-following effect
+- `GlowingCard` - Hover glow
+
+### 🎨 20 Available Themes (10 Families × Light/Dark)
+
+1. **Default** - Neutral, versatile
+2. **Ocean** - Calming blues
+3. **Sunset** - Warm oranges/purples
+4. **Professional** - Corporate gray/blue
+5. **High-Contrast** - WCAG AAA accessibility
+6. **Tech** - Futuristic cyan/purple ⭐ NEW
+7. **Finance** - Trustworthy navy/gold ⭐ NEW
+8. **Health** - Caring greens/blues ⭐ NEW
+9. **Creative** - Bold magenta/yellow ⭐ NEW
+10. **Gaming** - High-energy purple/cyan ⭐ NEW
+
+**Each theme auto-applied based on `config.theme`**
+
+---
+
 ## 🎨 The Professional Design Checklist
 
 When generating UI, AI should apply ALL of these:
