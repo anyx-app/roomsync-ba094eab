@@ -1,0 +1,299 @@
+# Core Development Guidelines
+
+## ⛔ FORBIDDEN FILES (NEVER EDIT - CRITICAL!)
+
+**IF YOU EDIT ANY OF THESE FILES, THE ENTIRE TASK FAILS. READ THIS LIST CAREFULLY.**
+
+You MUST NOT change ANY of these files under ANY circumstances:
+- `.eslintrc.cjs` ❌
+- `.gitignore` ❌
+- `package.json` ❌ (use `pnpm add <package>` instead)
+- `pnpm-lock.yaml` ❌
+- `tsconfig.json` ❌
+- `tsconfig.node.json` ❌
+- `vercel.json` ❌
+- `vite.config.ts` ❌
+- `anyx-logo.png` ❌
+- `.github/` ❌ (any files in this directory)
+- `index.html` ❌
+- `tailwind.config.ts` ❌
+- `postcss.config.js` ❌
+- `.openhands/microagents/` ❌ (any files in this directory - these are YOUR instructions!)
+
+**WHY THESE ARE FORBIDDEN:**
+- These files control the build system, deployment, and project infrastructure
+- Editing them breaks the deployment pipeline and CI/CD
+- The boilerplate is carefully configured - changes cause build failures
+- Microagent files are YOUR instructions - editing them corrupts guidance
+
+**FOR DEPENDENCIES:**
+
+**⚠️ CRITICAL: Always commit pnpm-lock.yaml after adding packages! ⚠️**
+
+1. ✅ Run: `pnpm add <package-name>`
+2. ✅ **IMMEDIATELY commit BOTH files:**
+   ```bash
+   git add package.json pnpm-lock.yaml
+   git commit -m "feat: add <package-name> dependency"
+   ```
+3. ❌ NEVER manually edit `package.json`
+4. ❌ NEVER run `pnpm add` without committing the lockfile
+
+**Why this is critical:**
+- Uncommitted `pnpm-lock.yaml` causes deployment failures
+- Vercel uses `--frozen-lockfile` by default in CI
+- Mismatched lockfile = "Cannot install with frozen-lockfile" error
+- This blocks ALL deployments until fixed
+
+**ONLY EDIT FILES IN:**
+- ✅ `src/` directory (pages, components, hooks, utils, types, data)
+- ✅ `supabase/migrations/*.sql` (if database is connected)
+- ✅ `README.md` (project documentation)
+- ✅ `.openhands/microagents/repo.md` (project context - YOU MUST UPDATE THIS)
+
+---
+
+## 🚨 CRITICAL: Routing Setup (Fix Boilerplate Index)
+
+**PROBLEM**: React shows boilerplate index.html instead of your generated pages!
+
+**CAUSE**: Routing not configured in `src/main.tsx`
+
+### **Landing Pages** (Single Page, No Routing):
+
+✅ **NO ROUTING NEEDED** - Single page apps don't need React Router
+
+**Structure**:
+```tsx
+// src/main.tsx - Keep simple
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App'
+import './index.css'
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+)
+```
+
+```tsx
+// src/App.tsx - Your landing page
+import Header from './components/Header'
+import { HeroGradient } from './components/recipes/heroes/HeroGradient'
+import Footer from './components/Footer'
+
+export default function App() {
+  return (
+    <>
+      <Header />
+      <HeroGradient />
+      {/* ...rest of your page */}
+      <Footer />
+    </>
+  )
+}
+```
+
+### **Dashboards** (Multi-Page, Routes Required):
+
+✅ **MUST CONFIGURE ROUTING** in `src/main.tsx`
+
+**Structure**:
+```tsx
+// src/main.tsx - Add BrowserRouter
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import DashboardPage from './pages/DashboardPage'
+import './index.css'
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<DashboardPage />} />
+      </Routes>
+    </BrowserRouter>
+  </React.StrictMode>
+)
+```
+
+```tsx
+// src/pages/DashboardPage.tsx - Your dashboard
+import { DashboardLayout } from '@/components/recipes/dashboards/DashboardLayout'
+import { StatGrid } from '@/components/recipes/dashboards/StatGrid'
+
+export default function DashboardPage() {
+  return (
+    <DashboardLayout>
+      <StatGrid stats={[...]} />
+      {/* ...rest of dashboard */}
+    </DashboardLayout>
+  )
+}
+```
+
+### **⚠️ CRITICAL TESTS**:
+
+**After building, test**:
+1. Navigate to `/` → Should show YOUR page, NOT "Vite + React" boilerplate
+2. No console errors
+3. All components render
+
+**If you see "Vite + React" text → Routing is broken! Fix it!**
+
+---
+
+## 🚨 CRITICAL: Defensive Coding (Prevent Crashes)
+
+**MANDATORY: Read `.openhands/microagents/defensive-coding.md` for complete patterns.**
+
+**Every generated project MUST follow these rules to prevent runtime errors:**
+
+### Rule 1: Safe Array Operations
+```tsx
+// ❌ WRONG - Will crash if features is undefined
+{features.map(f => <div>{f.title}</div>)}
+
+// ✅ CORRECT - Safe with fallback
+{(features || []).map(f => <div>{f.title}</div>)}
+{features?.map(f => <div>{f.title}</div>) ?? <p>No features</p>}
+```
+
+### Rule 2: Always Provide Default Values
+```tsx
+// ❌ WRONG
+const [data, setData] = useState()
+
+// ✅ CORRECT
+const [data, setData] = useState([])
+const [items, setItems] = useState<Item[]>([])
+```
+
+### Rule 3: Props Must Have Defaults
+```tsx
+// ❌ WRONG
+function FeatureList({ features }) {
+  return features.map(f => <div>{f.title}</div>)
+}
+
+// ✅ CORRECT
+function FeatureList({ features = [] }) {
+  return features.map(f => <div key={f.id}>{f.title}</div>)
+}
+```
+
+### Rule 4: Use Optional Chaining
+```tsx
+// ❌ WRONG
+const name = user.profile.name
+
+// ✅ CORRECT
+const name = user?.profile?.name
+const name = user?.profile?.name || 'Anonymous'
+```
+
+**⚠️ BEFORE CREATING PR: Test that refreshing the page doesn't crash!**
+
+**See defensive-coding.md for complete patterns and examples.**
+
+## 🔒 CRITICAL: Environment Variables & Secrets Security
+
+**⚠️ NEVER COMMIT SECRETS TO GIT! ⚠️**
+
+### ❌ FORBIDDEN - DO NOT CREATE OR COMMIT:
+- `.env` files with actual secrets
+- `.env.local` files with credentials
+- Any file containing `SUPABASE_SERVICE_ROLE_KEY`
+- Any file containing actual API keys or passwords
+
+### ✅ CORRECT APPROACH:
+
+**For Supabase credentials:**
+```typescript
+// ✅ CORRECT - Use environment variables from Vercel
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+```
+
+**These values are:**
+- ✅ Automatically provided by Vercel at build/runtime
+- ✅ Set via Vercel dashboard (not in code)
+- ✅ Never committed to Git
+- ✅ Safe to use in frontend code
+
+**If you need to document environment variables:**
+```bash
+# ✅ CORRECT - Create .env.example (no actual values)
+VITE_SUPABASE_URL=your-project-url-here
+VITE_SUPABASE_ANON_KEY=your-anon-key-here
+```
+
+### 🚨 SECURITY RULES:
+
+1. **NEVER** create `.env` or `.env.local` files with real credentials
+2. **ALWAYS** use `import.meta.env.VITE_*` for environment variables
+3. **ONLY** create `.env.example` files with placeholder values
+4. **CHECK** `.gitignore` includes `.env*` (already configured)
+5. **USE** Vercel dashboard for setting actual environment variables
+
+**Why this matters:**
+- Committing secrets to Git exposes them permanently in history
+- Anyone with repo access can steal credentials
+- GitHub scanners will flag and revoke exposed secrets
+- This is a critical security vulnerability
+
+## Git Configuration
+
+**MANDATORY**: Set git author for all commits:
+```bash
+git config user.name "Anyx Agent"
+git config user.email "ai@anyx.app"
+```
+
+All commits MUST use: `--author="Anyx Agent <ai@anyx.app>"`
+
+## Cost Efficiency & Token Optimization
+
+Be cost-effective with token usage:
+
+### Code Analysis
+1. Use `grep -r` to locate files before viewing
+2. Use `git log --oneline` instead of full history
+3. Use `find` with specific patterns, not broad listings
+4. Read specific line ranges, not entire files
+
+### File Operations
+1. Combine multiple edits in single operations
+2. Use `sed` for global find-replace across files
+3. Plan edits to minimize file access
+
+### Development
+1. Keep React components ≤50 lines when possible
+2. Don't create more than 3 pages in initial versions
+3. Focus on core features, avoid over-engineering
+4. Only edit files inside `/src/` directory
+
+## Quality Standards
+
+**Before every commit:**
+1. Run `pnpm lint` - must pass
+2. Run `pnpm build` - must succeed
+3. Update `.openhands/microagents/repo.md` with changes
+4. Update `README.md` if functionality changed
+
+## Browser & Testing
+
+- **Don't access browser** - focus on code
+- **No browser tests** - rely on lint/build
+- You're responsible for **frontend only** (no DevOps, server-side)
+
+## When Stuck
+
+After 3 failed attempts:
+1. Document what you tried
+2. Provide structured output with `task_status: "stuck"`
+3. Don't be ashamed - ask for help early
+

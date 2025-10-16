@@ -1,4 +1,4 @@
-# AnyX React Boilerplate - Multi-page Web App
+# Summarize survey responses into themes, highlight attribution signals, and propose 3 actions. UI: Insights-rich gradient feedback analysis with sentiment themes, attribution flow diagrams, and action priority scores.
 
 A starter template for building scalable multi-page React applications with modern patterns and best practices.
 
