@@ -319,6 +319,7 @@ const response = await anyx.llm({
 // response.text is string
 // response.model is string
 // response.success is boolean
+// response.requestId is string | undefined (for tracking)
 
 // Vision response type
 const vision = await anyx.vision({ prompt: '...', images: ['...'] })
@@ -326,19 +327,23 @@ const vision = await anyx.vision({ prompt: '...', images: ['...'] })
 // vision.model is string
 // vision.imagesProcessed is number
 // vision.success is boolean
-// vision.requestId is string
+// vision.requestId is string | undefined
 
 // Image response type
 const image = await anyx.image({ prompt: '...' })
-// image.url is string, image.revised_prompt is string
+// image.url is string
+// image.revised_prompt is string
+// image.requestId is string | undefined
 
 // Email response type
 const email = await anyx.email({ to: '...', subject: '...', html: '...' })
 // email.messageId is string
+// email.requestId is string | undefined
 
 // SMS response type  
 const sms = await anyx.sms({ to: '...', body: '...' })
 // sms.messageId is string
+// sms.requestId is string | undefined
 ```
 
 ## MANDATORY: Implement at Least One LLM Feature

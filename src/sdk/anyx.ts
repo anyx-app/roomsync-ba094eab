@@ -66,6 +66,7 @@ const LlmResponseSchema = z.object({
   success: z.boolean(),
   model: z.string(),
   text: z.string(),
+  requestId: z.string().optional(),
 });
 export type LlmResponse = z.infer<typeof LlmResponseSchema>;
 
@@ -83,18 +84,21 @@ const ImageResponseSchema = z.object({
   model: z.string(),
   size: z.string(),
   image: z.unknown(),
+  requestId: z.string().optional(),
 });
 export type ImageResponse = z.infer<typeof ImageResponseSchema>;
 
 const EmailResponseSchema = z.object({
   success: z.boolean(),
   id: z.string(),
+  requestId: z.string().optional(),
 });
 export type EmailResponse = z.infer<typeof EmailResponseSchema>;
 
 const SmsResponseSchema = z.object({
   success: z.boolean(),
   sid: z.string(),
+  requestId: z.string().optional(),
 });
 export type SmsResponse = z.infer<typeof SmsResponseSchema>;
 
