@@ -134,6 +134,9 @@ importers:
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      patch-package:
+        specifier: ^8.0.0
+        version: 8.0.1
       react:
         specifier: ^19.1.0
         version: 19.1.1
@@ -231,9 +234,6 @@ importers:
       lovable-tagger:
         specifier: ^1.1.7
         version: 1.1.9(vite@5.4.19(@types/node@20.19.9))
-      patch-package:
-        specifier: ^8.0.0
-        version: 8.0.1
       postcss:
         specifier: ^8.4.39
         version: 8.5.6
