@@ -212,6 +212,30 @@ class QueryBuilder {
 
 // Storage Client Singleton
 let _storageClient: SupabaseClient | null = null;
+let _nativeClient: SupabaseClient | null = null;
+
+export const getSupabase = () => {
+    if (_nativeClient) return _nativeClient;
+
+    // Helper to get environment variables safely
+    const getEnv = (key: string) => {
+        // eslint-disable-next-line
+        if (typeof process !== 'undefined' && process.env && process.env[key]) return process.env[key];
+        // eslint-disable-next-line
+        if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env[key]) return import.meta.env[key];
+        return undefined;
+    };
+
+    const supabaseUrl = getEnv('VITE_SUPABASE_URL') || getEnv('NEXT_PUBLIC_SUPABASE_URL');
+    const supabaseKey = getEnv('VITE_SUPABASE_ANON_KEY') || getEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY');
+
+    if (!supabaseUrl || !supabaseKey) {
+        return null;
+    }
+
+    _nativeClient = createClient(supabaseUrl, supabaseKey);
+    return _nativeClient;
+};
 
 const getStorageClient = () => {
     if (_storageClient) return _storageClient.storage;

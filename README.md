@@ -94,8 +94,6 @@ Best practices:
 2. **Install dependencies**
 
    ```bash
-   npm install
-   # or
    pnpm install
    ```
 
