@@ -1,10 +1,5 @@
-import { useContext } from 'react'
-import { AuthContext } from '@/auth/AuthProvider'
 
-export function useAuth() {
-  const ctx = useContext(AuthContext)
-  if (!ctx) throw new Error('useAuth must be used within <AuthProvider>')
-  return ctx
-}
+import { useAuth } from '../contexts/AuthContext';
 
-
+// Re-export for convenience, or add specific hooks like useUser, useSession
+export { useAuth };
